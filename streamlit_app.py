@@ -47,7 +47,10 @@ else:
 
             df = pd.DataFrame([emoji_values])
             df.index = ['']
-            st.table(df)
+
+            split_dfs = [df.iloc[:, i:i+5] for i in range(0, df.shape[1], 5)]
+            for split_df in split_dfs:
+                st.dataframe(split_df, use_container_width=True)
 
         with st.spinner('Generating...'):
             result = writer.edit(txt_input, score)
