@@ -2,6 +2,7 @@ import streamlit as st
 from gpt import UXwriter
 import pandas as pd
 import json
+
 def boolean_to_emoji(value):
     return '✅' if value else '❌'
 
@@ -12,10 +13,24 @@ st.write(
 )
 
 openai_api_key = st.text_input("OpenAI API Key", type="password")
+option = st.selectbox(
+    "UX 라이팅 매뉴얼을 선택하세요",
+    ["select", "Toss", "Squeezebits"],
+    index=0
+)
 if not openai_api_key:
     st.info("Please add your OpenAI API key to continue.", icon="🗝️")
+
+elif option == "select":
+    st.info("Please select your manual to continue.", icon="🧾")
+
 else:
-    writer = UXwriter(openai_api_key)
+    if option == "Toss":
+        from toss import TOSS
+        writer = UXwriter(openai_api_key, TOSS)
+    else:
+        from sqzb import SQZB
+        writer = UXwriter(openai_api_key, SQZB)
 
     # Text input
     txt_input = st.text_area('Enter your text', '', height=200)
