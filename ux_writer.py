@@ -5,10 +5,13 @@ import json
 class UXwriter:
     client = None
     manual = None
+    data_schema = None
+    is_English:bool = False
 
-    def __init__(self, api_key, manual):
+    def __init__(self, api_key, manual, is_English:bool):
         self.client = OpenAI(api_key=api_key)
         self.manual = manual
+        self.is_English = is_English
         self.data_schema = self._generate_data_schema()
 
     def _generate_data_schema(self):
@@ -80,8 +83,9 @@ class UXwriter:
         return response.choices[0].message.content
     
     def _edit_system_prompt(self):
-        return f"""{self.manual.system_prompt}
-                    no talk; just do.
+        return f"""{'The output should always be in English' if self.is_English else 'The output should be in the same language as the input'}.
+                            {self.manual.system_prompt}
+                            no talk; just do.
                     
                     Core Values:
                     {self.manual.core_values}

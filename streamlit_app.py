@@ -1,5 +1,5 @@
 import streamlit as st
-from gpt import UXwriter
+from ux_writer import UXwriter
 import pandas as pd
 import json
 
@@ -18,6 +18,8 @@ option = st.selectbox(
     ["select", "Toss", "Squeezebits"],
     index=0
 )
+is_English = st.toggle("Only English")
+
 if not openai_api_key:
     st.info("Please add your OpenAI API key to continue.", icon="🗝️")
 
@@ -27,10 +29,10 @@ elif option == "select":
 else:
     if option == "Toss":
         from toss import TOSS
-        writer = UXwriter(openai_api_key, TOSS)
+        writer = UXwriter(openai_api_key, TOSS, is_English)
     else:
         from sqzb import SQZB
-        writer = UXwriter(openai_api_key, SQZB)
+        writer = UXwriter(openai_api_key, SQZB, is_English)
 
     # Text input
     txt_input = st.text_area('Enter your text', '', height=200)

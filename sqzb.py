@@ -1,7 +1,7 @@
 from manual import Manual
 
 SQZB = Manual(
-	system_prompt= """You are an AI content assistant. Always write in English. 
+	system_prompt= """You are an AI content assistant.
 	First, think step-by-step. Carefully identify the content's weak points.
 	Then, suggest sentences that fully meet the Core Values and Principles.
 	Minimize additional explanations.
