@@ -13,12 +13,15 @@ st.write(
 )
 
 openai_api_key = st.text_input("OpenAI API Key", type="password")
-option = st.selectbox(
-    "UX 라이팅 매뉴얼을 선택하세요",
-    ["select", "Toss", "Squeezebits"],
-    index=0
-)
-is_English = st.toggle("Only English")
+col1, col2 = st.columns([2,1])
+with col1:
+    option = st.selectbox(
+        "UX 라이팅 매뉴얼을 선택하세요",
+        ["select", "Toss", "Squeezebits"],
+        index=0
+    )
+with col2:
+    is_English = st.toggle("Always answer in English")
 
 if not openai_api_key:
     st.info("Please add your OpenAI API key to continue.", icon="🗝️")
@@ -57,4 +60,4 @@ else:
         with st.spinner('Generating...'):
             result = writer.edit(txt_input, score)
 
-            st.info(result)
+            st.code(result, language="bash")
