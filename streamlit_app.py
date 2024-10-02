@@ -2,6 +2,8 @@ import streamlit as st
 from ux_writer import UXwriter
 import pandas as pd
 import json
+from st_copy_to_clipboard import st_copy_to_clipboard
+
 
 def boolean_to_emoji(value):
     return '✅' if value else '❌'
@@ -13,7 +15,7 @@ st.write(
 )
 
 openai_api_key = st.text_input("OpenAI API Key", type="password")
-col1, col2 = st.columns([2,1])
+col1, col2 = st.columns(2, vertical_alignment="bottom")
 with col1:
     option = st.selectbox(
         "UX 라이팅 매뉴얼을 선택하세요",
@@ -43,6 +45,7 @@ else:
     submitted = st.button('Check')
 
     if submitted and openai_api_key.startswith('sk-'):
+        score1, score2 = st.columns(2)
         with st.spinner('Calculating...'):
             score = writer.get_score(txt_input)
             
@@ -53,11 +56,13 @@ else:
             df = pd.DataFrame([emoji_values])
             df.index = ['']
 
-            split_dfs = [df.iloc[:, i:i+5] for i in range(0, df.shape[1], 5)]
-            for split_df in split_dfs:
-                st.dataframe(split_df, use_container_width=True)
+            split_index = (len(df.columns)+1) // 2
+            with score1:
+                st.table(df.iloc[:, :split_index].T)
+            with score2:
+                st.table(df.iloc[:,split_index:].T)
 
         with st.spinner('Generating...'):
             result = writer.edit(txt_input, score)
-
-            st.code(result, language="bash")
+            st.info(result)
+            st_copy_to_clipboard(result)
